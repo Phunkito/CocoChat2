@@ -35,9 +35,9 @@ public class RegistroManager {
         }
     }
 
-    public boolean crearUsuario(String usuario, String contraseña) {
+    public boolean crearUsuario(String usuario, String password) {
         // Verificar que la contraseña tenga al menos 8 caracteres
-        if (contraseña.length() < 8) {
+        if (password.length() < 8) {
             JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 caracteres.");
             return false;
         }
@@ -49,7 +49,7 @@ public class RegistroManager {
         }
 
         // Encriptar la contraseña antes de almacenarla en la base de datos
-        String contraseñaEncriptada = encriptarContraseña(contraseña);
+        String contraseñaEncriptada = encriptarContraseña(password);
 
         String consulta = "INSERT INTO usuario (username, password) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
