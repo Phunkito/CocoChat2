@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package cocochat;
 
 /**
@@ -14,17 +13,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginInterfaz extends JFrame {
+public class RegistroInterfaz extends JFrame {
 
     private JTextField campoUsuario;
     private JPasswordField campoContraseña;
-    private LoginManager loginManager;
+    private JTextField campoSecurityWord; // Nuevo campo para la respuesta de seguridad
 
-    public LoginInterfaz() {
-        loginManager = new LoginManager();
+    private RegistroManager registroManager;
 
-        setTitle("Inicio de sesión");
-        setSize(350, 300);
+    public RegistroInterfaz() {
+        registroManager = new RegistroManager();
+
+        setTitle("Registro de Usuario");
+        setSize(350, 350);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -55,55 +56,39 @@ public class LoginInterfaz extends JFrame {
         gbc.gridy++;
         panel.add(campoContraseña, gbc);
 
-        JButton botonIniciarSesion = new JButton("Iniciar Sesión");
-        botonIniciarSesion.setPreferredSize(new Dimension(150, 40));
+          JLabel labelSecurityWord = new JLabel("Como se llama tu primera mascota?:");
+        campoSecurityWord = new JTextField();
+        campoSecurityWord.setPreferredSize(new Dimension(200, 30));
 
-        botonIniciarSesion.addActionListener(new ActionListener() {
+        gbc.gridy++;
+        panel.add(labelSecurityWord, gbc);
+        gbc.gridy++;
+        panel.add(campoSecurityWord, gbc);
+
+        JButton botonCrearUsuario = new JButton("Crear Usuario");
+        botonCrearUsuario.setPreferredSize(new Dimension(150, 40));
+
+        botonCrearUsuario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usuario = campoUsuario.getText();
                 String contraseña = new String(campoContraseña.getPassword());
+                String securityWord = campoSecurityWord.getText(); // Obtener la respuesta de seguridad
 
-                if (loginManager.iniciarSesion(usuario, contraseña)) {
-                    JOptionPane.showMessageDialog(LoginInterfaz.this, "Inicio de sesión exitoso");
+                if (registroManager.crearUsuario(usuario, contraseña, securityWord)) {
+                    JOptionPane.showMessageDialog(RegistroInterfaz.this, "Usuario creado exitosamente");
+                    dispose(); // Cerrar la ventana actual después de crear el usuario
+                    new LoginInterfaz(); // Abrir la interfaz de inicio de sesión
                 } else {
-                    JOptionPane.showMessageDialog(LoginInterfaz.this, "Credenciales incorrectas");
+                    JOptionPane.showMessageDialog(RegistroInterfaz.this, "Error al crear el usuario");
                 }
             }
         });
 
         gbc.gridy++;
-        panel.add(botonIniciarSesion, gbc);
-
-        JButton botonRecuperarContraseña = new JButton("Recuperar Contraseña");
-        gbc.gridy++;
-        panel.add(botonRecuperarContraseña, gbc);
-
-        JButton botonCrearCuenta = new JButton("Crear Cuenta");
-        gbc.gridy++;
-        panel.add(botonCrearCuenta, gbc);
-
-        botonCrearCuenta.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Cerrar la ventana actual
-                new RegistroInterfaz(); // Abrir la nueva interfaz para registro
-            }
-        });
-
-        botonRecuperarContraseña.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Cerrar la ventana actual
-                new RecuperarContraseñaInterfaz(); // Abrir la nueva interfaz para recuperar contraseña
-            }
-        });
+        panel.add(botonCrearUsuario, gbc);
 
         add(panel);
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginInterfaz::new);
     }
 }

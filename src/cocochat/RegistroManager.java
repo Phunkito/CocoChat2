@@ -8,12 +8,16 @@ package cocochat;
  *
  * @author alan2
  */
-import java.security.MessageDigest;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
-import javax.swing.*;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class RegistroManager {
     private Connection connection;
@@ -27,17 +31,17 @@ public class RegistroManager {
             try {
                 connection = DriverManager.getConnection(url, "root", "");
             } catch (SQLException ex) {
-                Logger.getLogger(LoginManager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RegistroManager.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(LoginManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegistroManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public boolean crearUsuario(String usuario, String password) {
+    public boolean crearUsuario(String usuario, String contraseña, String securityWord) {
         // Verificar que la contraseña tenga al menos 8 caracteres
-        if (password.length() < 8) {
+        if (contraseña.length() < 8) {
             JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 caracteres.");
             return false;
         }
@@ -48,13 +52,15 @@ public class RegistroManager {
             return false;
         }
 
-        // Encriptar la contraseña antes de almacenarla en la base de datos
-        String contraseñaEncriptada = encriptarContraseña(password);
+        // Encriptar la contraseña y la palabra de seguridad antes de almacenarlas en la base de datos
+        String contraseñaEncriptada = encriptarTexto(contraseña);
+        String securityWordEncriptada = encriptarTexto(securityWord);
 
-        String consulta = "INSERT INTO usuario (username, password) VALUES (?, ?)";
+        String consulta = "INSERT INTO usuario (username, password, security_word) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             stmt.setString(1, usuario);
             stmt.setString(2, contraseñaEncriptada);
+            stmt.setString(3, securityWordEncriptada);
             int filasAfectadas = stmt.executeUpdate();
             return filasAfectadas > 0; // Retorna true si al menos una fila fue insertada correctamente
         } catch (SQLException ex) {
@@ -78,30 +84,31 @@ public class RegistroManager {
         return false;
     }
 
-    // Método para encriptar la contraseña utilizando el algoritmo SHA-256
-    private String encriptarContraseña(String contraseña) {
+    // Método para encriptar la contraseña y la palabra de seguridad utilizando PBKDF2 con HMAC-SHA256
+    private String encriptarTexto(String texto) {
         try {
-            // Crear una instancia del algoritmo de hash SHA-256
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[16];
+            random.nextBytes(salt);
 
-            // Aplicar el algoritmo de hash a la contraseña
-            byte[] hash = digest.digest(contraseña.getBytes());
+            // Configurar los parámetros para la derivación de claves
+            PBEKeySpec spec = new PBEKeySpec(texto.toCharArray(), salt, 65536, 256);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 
-            // Convertir el hash en una representación hexadecimal
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
+            // Derivar la clave
+            byte[] hash = factory.generateSecret(spec).getEncoded();
 
-            // Retornar la contraseña encriptada como una cadena hexadecimal
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
+            // Concatenar el salt con el hash para almacenar ambos en la base de datos
+            byte[] combined = new byte[salt.length + hash.length];
+            System.arraycopy(salt, 0, combined, 0, salt.length);
+            System.arraycopy(hash, 0, combined, salt.length, hash.length);
+
+            // Retornar el texto encriptado como una cadena Base64
+            return Base64.getEncoder().encodeToString(combined);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
             return null; // Manejo de error en caso de algoritmo no encontrado
         }
     }
 }
+

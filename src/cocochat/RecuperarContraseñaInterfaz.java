@@ -18,11 +18,15 @@ public class RecuperarContraseñaInterfaz extends JFrame {
     private JTextField campoUsuario;
     private JPasswordField campoNuevaContraseña;
     private JPasswordField campoConfirmarContraseña;
+    private JTextField campoSecurityWord; // Nuevo campo para la palabra de seguridad
+    private PasswordRecoveryManager recoveryManager;
 
     public RecuperarContraseñaInterfaz() {
+        recoveryManager = new PasswordRecoveryManager();
+
         // Configuración de la ventana
         setTitle("Recuperar Contraseña");
-        setSize(350, 320);
+        setSize(350, 400); // Aumenta el tamaño para acomodar el nuevo campo
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -65,14 +69,29 @@ public class RecuperarContraseñaInterfaz extends JFrame {
         gbc.gridy++;
         panel.add(campoConfirmarContraseña, gbc);
 
+        // Nuevo campo para la palabra de seguridad
+        JLabel labelSecurityWord = new JLabel("Palabra de seguridad:");
+        campoSecurityWord = new JTextField();
+        campoSecurityWord.setPreferredSize(new Dimension(200, 30));
+
+        gbc.gridy++;
+        panel.add(labelSecurityWord, gbc);
+        gbc.gridy++;
+        panel.add(campoSecurityWord, gbc);
+
         JButton botonRecuperarContraseña = new JButton("Recuperar Contraseña");
         botonRecuperarContraseña.setPreferredSize(new Dimension(150, 40));
 
         botonRecuperarContraseña.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica para recuperar la contraseña
-                // Implementa la lógica de recuperación de contraseña aquí
+                String usuario = campoUsuario.getText();
+                String nuevaContraseña = new String(campoNuevaContraseña.getPassword());
+                String confirmarContraseña = new String(campoConfirmarContraseña.getPassword());
+                String securityWord = campoSecurityWord.getText(); // Obtener la palabra de seguridad
+
+                // Llamada al método cambiarContraseña del PasswordRecoveryManager con la palabra de seguridad
+                recoveryManager.cambiarContraseña(usuario, nuevaContraseña, confirmarContraseña, securityWord);
             }
         });
 
