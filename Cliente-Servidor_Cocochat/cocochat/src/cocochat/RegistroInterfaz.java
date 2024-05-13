@@ -38,7 +38,11 @@ public class RegistroInterfaz extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 5, 10);
+        
+                gbc.gridy++;
 
+        
+        
         JLabel labelUsuario = new JLabel("Usuario:");
         campoUsuario = new JTextField();
         campoUsuario.setPreferredSize(new Dimension(200, 30));
@@ -46,7 +50,7 @@ public class RegistroInterfaz extends JFrame {
         panel.add(labelUsuario, gbc);
         gbc.gridy++;
         panel.add(campoUsuario, gbc);
-
+        
         JLabel labelContraseña = new JLabel("Contraseña:");
         campoContraseña = new JPasswordField();
         campoContraseña.setPreferredSize(new Dimension(200, 30));
@@ -67,6 +71,21 @@ public class RegistroInterfaz extends JFrame {
 
         JButton botonCrearUsuario = new JButton("Crear Usuario");
         botonCrearUsuario.setPreferredSize(new Dimension(150, 40));
+        JButton botonVolver = new JButton("Regresar");
+        botonVolver.setPreferredSize(new Dimension(150, 40));
+
+        botonVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+
+                dispose(); // Cerrar la ventana actual
+                new LoginInterfaz(); // Abrir la nueva interfaz para registro
+            }
+            
+        });
+
+
 
         botonCrearUsuario.addActionListener(new ActionListener() {
             @Override
@@ -86,6 +105,8 @@ public class RegistroInterfaz extends JFrame {
         });
 
         gbc.gridy++;
+                panel.add(botonVolver, gbc);
+                        gbc.gridy++;
         panel.add(botonCrearUsuario, gbc);
 
         add(panel);
