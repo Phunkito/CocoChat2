@@ -9,13 +9,14 @@ package cocochat;
  *
  * @author alan2
  */
+import Modelos.Usuario;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginInterfaz extends JFrame {
-
+    
     private JTextField campoUsuario;
     private JPasswordField campoContraseña;
     private LoginManager loginManager;
@@ -62,10 +63,14 @@ public class LoginInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usuario = campoUsuario.getText();
-                String contraseña = new String(campoContraseña.getPassword());
+                String contrasena = new String(campoContraseña.getPassword());
 
-                if (loginManager.iniciarSesion(usuario, contraseña)) {
+                if (loginManager.iniciarSesion(usuario, contrasena)) {
                     JOptionPane.showMessageDialog(LoginInterfaz.this, "Inicio de sesión exitoso");
+                    Usuario user = new Usuario(1, usuario, contrasena, true);//Cambiar el id, por medio de la query se va a colocar
+                    //Este pedo del id esta pendiente
+                    
+                    
                 } else {
                     JOptionPane.showMessageDialog(LoginInterfaz.this, "Credenciales incorrectas");
                 }

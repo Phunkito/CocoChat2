@@ -8,15 +8,25 @@ public class Usuario {
     private int id;
     private String username;
     private String password;
+    private boolean online; //esto no se inserta a la bd, se envia al server para saber quienes estan activos
 
     // Constructor
-    public Usuario(int id, String username, String password) {
+    public Usuario(int id, String username, String password, boolean online) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.online = online;
+    }
+    
+    // Getters y Setters
+    public boolean isOnline() {
+        return online;
     }
 
-    // Getters y Setters
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+    
     public int getId() {
         return id;
     }

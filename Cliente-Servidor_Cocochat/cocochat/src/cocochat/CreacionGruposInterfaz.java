@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 
-public class MenuUsuarioInterfaz extends JFrame {
+public class CreacionGruposInterfaz extends JFrame {
     private JPanel panelUsuarios;
     private JPanel panelAmigos;
     private JPanel panelGrupos;
@@ -16,7 +16,7 @@ public class MenuUsuarioInterfaz extends JFrame {
     private boolean ejecutando = true;
 
     // Constructor para configurar la interfaz
-    public MenuUsuarioInterfaz() {
+    public CreacionGruposInterfaz() {
         // Título de la ventana
         setTitle("Menú");
 
@@ -30,32 +30,20 @@ public class MenuUsuarioInterfaz extends JFrame {
         JLabel titulo = new JLabel("COCOCHAT");
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
-
-        JButton botonGrupo = new JButton("Crear Grupo");
-        botonGrupo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //JOptionPane.showMessageDialog(this, "Cerrar Sesión");
-                
-                new CreacionGruposInterfaz();
-                dispose();
-            }
-
-            //
-        });
         
         // Crear botones para solicitudes y cerrar sesión
-        JButton botonRequest = new JButton("Solicitudes");
-        botonRequest.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Solicitudes");
+        JButton botonCrear = new JButton("Crear");
+        botonCrear.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Creado :P");
         });
 
-        JButton botonLogOut = new JButton("Cerrar Sesion");
-        botonLogOut.addActionListener(new ActionListener() {
+        JButton botonReturn = new JButton("Regresa");
+        botonReturn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(this, "Cerrar Sesión");
-                
+                new MenuUsuarioInterfaz();
+                dispose();
             }
             
             //
@@ -65,25 +53,16 @@ public class MenuUsuarioInterfaz extends JFrame {
         // Crear el panel superior usando un diseño de cuadrícula
         JPanel panelSuperior = new JPanel(new GridLayout(1, 3, 10, 10));
         panelSuperior.add(titulo);
-        panelSuperior.add(botonGrupo);
-        panelSuperior.add(botonRequest);
-        panelSuperior.add(botonLogOut);        
+        panelSuperior.add(botonCrear);
+        panelSuperior.add(botonReturn);
 
         // Crear paneles vacíos que se llenarán con los datos recibidos
         panelUsuarios = crearPanelConLista("Usuarios", new String[]{});
-        panelAmigos = crearPanelConLista("Amigos", new String[]{});
-        panelGrupos = crearPanelConLista("Grupos", new String[]{});
-
-        // Usar un `JSplitPane` para dividir la ventana en tres partes verticales
-        JSplitPane splitPanePrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelUsuarios, panelAmigos);
-        splitPanePrincipal.setResizeWeight(0.33);
-        JSplitPane splitPaneCompleto = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanePrincipal, panelGrupos);
-        splitPaneCompleto.setResizeWeight(0.66);
 
         // Crear un panel principal usando `BorderLayout`
         JPanel panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
-        panelPrincipal.add(splitPaneCompleto, BorderLayout.CENTER);
+        panelPrincipal.add(panelUsuarios, BorderLayout.CENTER);
 
         add(panelPrincipal);
         setVisible(true);
@@ -210,6 +189,6 @@ public class MenuUsuarioInterfaz extends JFrame {
 
     // Método principal para iniciar la aplicación
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MenuUsuarioInterfaz());
+        SwingUtilities.invokeLater(() -> new CreacionGruposInterfaz());
     }
 }
