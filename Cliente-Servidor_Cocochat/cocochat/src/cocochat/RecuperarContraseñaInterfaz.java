@@ -12,6 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.spec.InvalidKeySpecException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RecuperarContraseñaInterfaz extends JFrame {
 
@@ -89,9 +92,12 @@ public class RecuperarContraseñaInterfaz extends JFrame {
                 String nuevaContraseña = new String(campoNuevaContraseña.getPassword());
                 String confirmarContraseña = new String(campoConfirmarContraseña.getPassword());
                 String securityWord = campoSecurityWord.getText(); // Obtener la palabra de seguridad
-
-                // Llamada al método cambiarContraseña del PasswordRecoveryManager con la palabra de seguridad
-                recoveryManager.cambiarContraseña(usuario, nuevaContraseña, confirmarContraseña, securityWord);
+                try {
+                    // Llamada al método cambiarContraseña del PasswordRecoveryManager con la palabra de seguridad
+                    recoveryManager.cambiarContraseña(usuario, nuevaContraseña, confirmarContraseña, securityWord);
+                } catch (InvalidKeySpecException ex) {
+                    Logger.getLogger(RecuperarContraseñaInterfaz.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
