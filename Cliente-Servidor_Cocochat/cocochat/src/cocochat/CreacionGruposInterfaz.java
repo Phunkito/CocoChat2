@@ -14,6 +14,8 @@ public class CreacionGruposInterfaz extends JFrame {
     private PrintWriter salidaServidor;
     private BufferedReader entradaServidor;
     private boolean ejecutando = true;
+    private DefaultListModel<String> listModel;
+
 
     // Constructor para configurar la interfaz
     public CreacionGruposInterfaz() {
@@ -73,16 +75,32 @@ public class CreacionGruposInterfaz extends JFrame {
 
     // Método para crear un panel con una lista y botones con íconos condicionales
     private JPanel crearPanelConLista(String titulo, String[] elementos) {
+        listModel = new DefaultListModel<>();
+
+        String[] listData = {"Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4"};
+        elementos = listData;
+
+        // Crear el componente JList
+        JList<String> list = new JList<>(elementos);
+        
+        // Asegurarse de que se puedan seleccionar múltiples elementos
+        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        // Crear un panel de desplazamiento para la lista
+        JScrollPane scrollPane = new JScrollPane(list);
+        
+        
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(titulo));
 
+        /*
         JPanel panelLista = new JPanel();
         panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
 
         // Ejemplo de ícono: cambiar la ruta a la imagen deseada
         Icon icono = new ImageIcon("ruta/al/icono.png");
 
-        for (String elemento : elementos) {
+        for (String elemento : listData) {
             // Panel para cada elemento que contiene un botón y una etiqueta opcional
             JPanel panelElemento = new JPanel(new BorderLayout());
             JButton botonElemento = new JButton(elemento);
@@ -99,8 +117,8 @@ public class CreacionGruposInterfaz extends JFrame {
 
             panelLista.add(panelElemento);
         }
+        */
 
-        JScrollPane scrollPane = new JScrollPane(panelLista);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;
