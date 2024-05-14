@@ -25,7 +25,7 @@ public class LoginManager {
 
     public LoginManager() {
         // Conexión a la base de datos
-        String url = "jdbc:mysql://localhost:3306/CocoChat";
+        String url = "jdbc:mysql://localhost:3306/CocoBase";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -43,14 +43,15 @@ public class LoginManager {
     public boolean iniciarSesion(String usuario, String password) {
         // Verificar que la contraseña tenga al menos 8 caracteres
 
-        String consulta = "SELECT * FROM usuario WHERE username = ?";
+        String consulta = "SELECT * FROM users WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                String contraseñaEncriptada = rs.getString("password");
+                
+                String pass = rs.getString("password");
                 // Desencriptar la contraseña almacenada en la base de datos
-                if (verificarContraseña(password, contraseñaEncriptada)) {
+                if (verificarContraseña(password, pass)) {
                     return true; // La contraseña coincide
                 }
             }
@@ -61,6 +62,11 @@ public class LoginManager {
         }
     }
 
+private boolean verificarContraseña(String contraseña, String contraseñaSinEncriptar) {
+    return contraseña.equals(contraseñaSinEncriptar);
+}
+}
+/*
     // Método para verificar la contraseña encriptada utilizando PBKDF2 con HMAC-SHA256
     private boolean verificarContraseña(String contraseña, String contraseñaEncriptada) {
         try {
@@ -86,3 +92,4 @@ public class LoginManager {
         }
     }
 }
+*/

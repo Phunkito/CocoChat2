@@ -24,7 +24,7 @@ public class RegistroManager {
 
     public RegistroManager() {
         // Conexión a la base de datos
-        String url = "jdbc:mysql://localhost:3306/CocoChat";
+        String url = "jdbc:mysql://localhost:3306/CocoBase";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -56,11 +56,11 @@ public class RegistroManager {
         String contraseñaEncriptada = encriptarTexto(contraseña);
         String securityWordEncriptada = encriptarTexto(securityWord);
 
-        String consulta = "INSERT INTO usuario (username, password, security_word) VALUES (?, ?, ?)";
+        String consulta = "INSERT INTO users (username, password, security_word) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             stmt.setString(1, usuario);
-            stmt.setString(2, contraseñaEncriptada);
-            stmt.setString(3, securityWordEncriptada);
+            stmt.setString(2, contraseña);
+            stmt.setString(3, securityWord);
             int filasAfectadas = stmt.executeUpdate();
             return filasAfectadas > 0; // Retorna true si al menos una fila fue insertada correctamente
         } catch (SQLException ex) {
@@ -70,7 +70,7 @@ public class RegistroManager {
     }
 
     private boolean existeUsuario(String usuario) {
-        String consulta = "SELECT COUNT(*) FROM usuario WHERE username = ?";
+        String consulta = "SELECT COUNT(*) FROM users WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();

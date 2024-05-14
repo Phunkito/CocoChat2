@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cocochat;
 
 /**
  *
  * @author alan2
  */
-
 import javax.swing.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,7 +20,7 @@ public class PasswordRecoveryManager {
 
     public PasswordRecoveryManager() {
         // Establecer conexión a la base de datos
-        String url = "jdbc:mysql://localhost:3306/CocoChat";
+        String url = "jdbc:mysql://localhost:3306/CocoBase";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, "root", "");
@@ -65,9 +60,9 @@ public class PasswordRecoveryManager {
         String contraseñaEncriptada = encriptarContraseña(nuevaContraseña);
 
         // Actualizar la contraseña en la base de datos
-        String consulta = "UPDATE usuario SET password = ? WHERE username = ?";
+        String consulta = "UPDATE users SET password = ? WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
-            stmt.setString(1, contraseñaEncriptada);
+            stmt.setString(1, nuevaContraseña);
             stmt.setString(2, usuario);
             int filasActualizadas = stmt.executeUpdate();
             if (filasActualizadas > 0) {
@@ -86,7 +81,7 @@ public class PasswordRecoveryManager {
 
     // Método para verificar si el usuario existe en la base de datos
     private boolean usuarioExiste(String usuario) {
-        String consulta = "SELECT * FROM usuario WHERE username = ?";
+        String consulta = "SELECT * FROM users WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();
@@ -132,14 +127,18 @@ public class PasswordRecoveryManager {
         }
     }
 
+    /*
     // Método para desencriptar la palabra de seguridad utilizando PBKDF2 con HMAC-SHA256
     private String desencriptarPalabraSeguridad(String usuario, String securityWord) {
-        String consulta = "SELECT security_word FROM usuario WHERE username = ?";
+        String consulta = "SELECT security_word FROM users WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();
+               String palabraSeguridadEncriptada = rs.getString("security_word");
+              
             if (rs.next()) {
-                String palabraSeguridadEncriptada = rs.getString("security_word");
+            
+                
                 byte[] combined = Base64.getDecoder().decode(palabraSeguridadEncriptada);
 
                 // Extraer el salt y el hash de la palabra de seguridad encriptada
@@ -155,21 +154,50 @@ public class PasswordRecoveryManager {
                 // Derivar la clave y compararla con el hash almacenado
                 byte[] testHash = factory.generateSecret(spec).getEncoded();
                 if (MessageDigest.isEqual(hash, testHash)) {
-                    return securityWord;
+                    return palabraSeguridadEncriptada;
                 }
             }
+
             JOptionPane.showMessageDialog(null, "Error al desencriptar la palabra de seguridad.");
             return null;
-        } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+    } catch (SQLException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
             JOptionPane.showMessageDialog(null, "Error al desencriptar la palabra de seguridad.");
+            ex.printStackTrace();
+            return null;
+        }
+      
+                 return palabraSeguridadEncriptada;
+            } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al desencriptar la palabra de seguridad.");
+            ex.printStackTrace();
+            return null;
+        }     
+             
+    
+        
+    }
+     */
+    private String recuperarPalabraSeguridad(String usuario) {
+        String consulta = "SELECT security_word FROM users WHERE username = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
+            stmt.setString(1, usuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("security_word");
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuario no encontrado.");
+                return null;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al recuperar la palabra de seguridad.");
             ex.printStackTrace();
             return null;
         }
     }
 
-    // Método para verificar si la palabra de seguridad coincide con la del usuario
+// Método para verificar si la palabra de seguridad coincide con la del usuario
     private boolean verificarPalabraSeguridad(String usuario, String securityWord) {
-        String palabraSeguridadDesencriptada = desencriptarPalabraSeguridad(usuario, securityWord);
-        return palabraSeguridadDesencriptada != null && palabraSeguridadDesencriptada.equals(securityWord);
+        String palabraSeguridad = recuperarPalabraSeguridad(usuario);
+        return palabraSeguridad != null && palabraSeguridad.equals(securityWord);
     }
 }

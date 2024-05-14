@@ -16,13 +16,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginInterfaz extends JFrame {
-    
+
     private JTextField campoUsuario;
     private JPasswordField campoContraseña;
     private LoginManager loginManager;
+    private int intentosFallidos;
 
     public LoginInterfaz() {
         loginManager = new LoginManager();
+        intentosFallidos = 0;
 
         setTitle("Inicio de sesión");
         setSize(350, 300);
@@ -67,12 +69,19 @@ public class LoginInterfaz extends JFrame {
 
                 if (loginManager.iniciarSesion(usuario, contrasena)) {
                     JOptionPane.showMessageDialog(LoginInterfaz.this, "Inicio de sesión exitoso");
+                    intentosFallidos = 0; // Resetear contador de intentos fallidos
                     Usuario user = new Usuario(1, usuario, contrasena, true);//Cambiar el id, por medio de la query se va a colocar
                     //Este pedo del id esta pendiente
                     
-                    
                 } else {
-                    JOptionPane.showMessageDialog(LoginInterfaz.this, "Credenciales incorrectas");
+                    intentosFallidos++; // Incrementar contador de intentos fallidos
+                    if (intentosFallidos >= 3) {
+                        JOptionPane.showMessageDialog(LoginInterfaz.this, "Demasiados intentos fallidos. Por favor, recupere su contraseña.");
+                        dispose(); // Cerrar la ventana actual
+                        new RegistroInterfaz(); // Abrir la nueva interfaz para recuperar contraseña
+                    } else {
+                        JOptionPane.showMessageDialog(LoginInterfaz.this, "Credenciales incorrectas");
+                    }
                 }
             }
         });
@@ -91,6 +100,7 @@ public class LoginInterfaz extends JFrame {
         botonCrearCuenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                intentosFallidos = 0; // Resetear contador de intentos fallidos
                 dispose(); // Cerrar la ventana actual
                 new RegistroInterfaz(); // Abrir la nueva interfaz para registro
             }
@@ -99,6 +109,7 @@ public class LoginInterfaz extends JFrame {
         botonRecuperarContraseña.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                intentosFallidos = 0; // Resetear contador de intentos fallidos
                 dispose(); // Cerrar la ventana actual
                 new RecuperarContraseñaInterfaz(); // Abrir la nueva interfaz para recuperar contraseña
             }
