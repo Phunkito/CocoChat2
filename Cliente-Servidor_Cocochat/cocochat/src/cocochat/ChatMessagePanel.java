@@ -42,13 +42,13 @@ public class ChatMessagePanel extends JPanel {
         if (length <= 110) {
             return 60;
         } else if (length > 110 && length < 220) {
-            return 100;
+            return 80;
         } else if (length >= 220 && length < 330) {
-            return 120;
+            return 100;
         } else if (length >= 330 && length < 440) {
-            return 170;
+            return 120;
         } else {
-            return 210;
+            return 130;
         }
     }
 }

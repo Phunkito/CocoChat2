@@ -11,10 +11,14 @@ package cocochat;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -34,8 +38,13 @@ public class ChatInterfaz extends JFrame {
     private JScrollPane jScrollPane1;
     private JTextArea txtTexto;
     private JTextField txtTextoEnviar;
+    private JPanel panelMensajes = new JPanel();
+    // Creas la lista y los componentes
+    ArrayList<ChatMessagePanel> Mensajes;
 
     public ChatInterfaz() {
+        this.Mensajes = new ArrayList<ChatMessagePanel>();
+
         setSize(800, 600);
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,18 +58,42 @@ public class ChatInterfaz extends JFrame {
 
         txtTexto.setColumns(20);
         txtTexto.setRows(13);
-        jScrollPane1.setViewportView(txtTexto);
         NombreChat.setFont(new Font("Arial", Font.BOLD, 20));
         NombreChat.setHorizontalAlignment(SwingConstants.CENTER);
 
         btnEnviar.setText("Enviar");
         btnEnviar.addActionListener(
                 new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        //Codigo para enviar mensaje
-                    }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cuando se presiona el botón, obtienes el texto del JTextField
+                String texto = txtTextoEnviar.getText();
+
+                if (texto.length() <= 500) {
+                    // Creas un nuevo ChatMessagePanel con ese texto
+                    ChatMessagePanel nuevoMensaje = new ChatMessagePanel("Nombre del usuario", texto);
+
+                    // Agregas el nuevo mensaje a la lista
+                    Mensajes.add(nuevoMensaje);
+
+                    // Agregas el nuevo mensaje al panel
+                    panelMensajes.add(nuevoMensaje);
+
+                    // Agregas el panel al JScrollPane
+                    jScrollPane1.setViewportView(panelMensajes);
+
+                    //Limpiar el textfield
+                    txtTextoEnviar.setText("");
+
+                    // Refrescas la vista
+                    getContentPane().revalidate();
+                    getContentPane().repaint();
+                } else {
+                    txtTextoEnviar.setText("");
+                    JOptionPane.showMessageDialog(jScrollPane1, "Lo sentimos, el mensaje no puede superar los 500 caracteres");
                 }
+            }
+        }
         );
 
         btnRegresar.setText("Regresar");
@@ -71,10 +104,17 @@ public class ChatInterfaz extends JFrame {
             }
         });
 
+        //Prototipo para agregar mensajes enviados
+        //Mensajes.add(new ChatMessagePanel("Nombre del usuario", "Mensaje"));
+        //Prototipo para agregar mensajes recibidos
+        //Mensajes.add(new ChatMessagePanel(NombreChat.getText(), "Mensaje"));
+        
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
+        panelMensajes.setLayout(new BoxLayout(panelMensajes, BoxLayout.Y_AXIS));
+
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -82,8 +122,8 @@ public class ChatInterfaz extends JFrame {
                                                 .addComponent(btnRegresar)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(NombreChat))
-                                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE) // Cambio aquí
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(txtTextoEnviar)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(btnEnviar, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)))
@@ -100,10 +140,11 @@ public class ChatInterfaz extends JFrame {
                                 .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE) // Cambio aquí
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtTextoEnviar, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE) // Cambio aquí
-                                        .addComponent(btnEnviar, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)) // Cambio aquí
+                                        .addComponent(txtTextoEnviar, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnEnviar, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
+
     }
 
     public static void main(String[] args) {
