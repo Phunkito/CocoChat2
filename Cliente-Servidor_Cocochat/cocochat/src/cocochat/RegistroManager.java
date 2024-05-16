@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 
 public class RegistroManager {
     private Connection connection;
+    public String mensaje;
 
     public RegistroManager() {
         // Conexión a la base de datos
@@ -62,6 +63,7 @@ public class RegistroManager {
             stmt.setString(2, contraseña);
             stmt.setString(3, securityWord);
             int filasAfectadas = stmt.executeUpdate();
+            mensaje = usuario + "," + contraseña + "," + securityWord;
             return filasAfectadas > 0; // Retorna true si al menos una fila fue insertada correctamente
         } catch (SQLException ex) {
             ex.printStackTrace();
