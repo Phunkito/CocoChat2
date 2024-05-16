@@ -68,7 +68,8 @@ public class LoginInterfaz extends JFrame {
                 String contrasena = new String(campoContraseña.getPassword());
 
                 if (loginManager.iniciarSesion(usuario, contrasena)) {
-                    JOptionPane.showMessageDialog(LoginInterfaz.this, "Inicio de sesión exitoso");
+                    new MenuUsuarioInterfaz();
+                    dispose();
                     intentosFallidos = 0; // Resetear contador de intentos fallidos
                     Usuario user = new Usuario(1, usuario, contrasena, true);//Cambiar el id, por medio de la query se va a colocar
                     //Este pedo del id esta pendiente
