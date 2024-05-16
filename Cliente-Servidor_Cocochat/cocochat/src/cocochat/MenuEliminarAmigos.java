@@ -71,6 +71,6 @@ public class MenuEliminarAmigos extends JPanel {
         add(userInfoPanel, BorderLayout.WEST);
         add(panelBotones, BorderLayout.EAST);
         add(invisibleButton, BorderLayout.CENTER);
-        setPreferredSize(new Dimension(280, 30)); // Tamaño del recuadro ajustado
+        setPreferredSize(new Dimension(290, 30)); // Tamaño del recuadro ajustado
     }
 }

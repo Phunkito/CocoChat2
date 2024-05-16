@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class CreacionGruposInterfaz extends JFrame {
     private JPanel panelUsuarios;
@@ -14,11 +15,22 @@ public class CreacionGruposInterfaz extends JFrame {
     private PrintWriter salidaServidor;
     private BufferedReader entradaServidor;
     private boolean ejecutando = true;
-    private DefaultListModel<String> listModel;
-
+    private ArrayList<MenuUsuariosConectados> allUsers = new ArrayList<MenuUsuariosConectados>();
 
     // Constructor para configurar la interfaz
     public CreacionGruposInterfaz() {
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        
         // Título de la ventana
         setTitle("Menú");
 
@@ -86,7 +98,7 @@ public class CreacionGruposInterfaz extends JFrame {
         panelSuperior.add(textFieldNombre, gbc);
 
         // Crear paneles vacíos que se llenarán con los datos recibidos
-        panelUsuarios = crearPanelConLista("Usuarios", new String[]{});
+        panelUsuarios = crearPanelConLista("Usuarios");
 
         // Crear un panel principal usando `BorderLayout`
         JPanel panelPrincipal = new JPanel(new BorderLayout());
@@ -101,54 +113,20 @@ public class CreacionGruposInterfaz extends JFrame {
     }
 
     // Método para crear un panel con una lista y botones con íconos condicionales
-    private JPanel crearPanelConLista(String titulo, String[] elementos) {
-        listModel = new DefaultListModel<>();
-
-        String[] listData = {"Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4"};
-        elementos = listData;
-
-        // Crear el componente JList
-        JList<String> list = new JList<>(elementos);
-        
-        // Asegurarse de que se puedan seleccionar múltiples elementos
-        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-        // Crear un panel de desplazamiento para la lista
-        JScrollPane scrollPane = new JScrollPane(list);
-        
-        
-        JPanel panel = new JPanel(new BorderLayout());
+    private JPanel crearPanelConLista(String titulo) {
+        JScrollPane scrollPane = new JScrollPane();
+        JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createTitledBorder(titulo));
 
-        /*
-        JPanel panelLista = new JPanel();
-        panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
-
-        // Ejemplo de ícono: cambiar la ruta a la imagen deseada
-        Icon icono = new ImageIcon("ruta/al/icono.png");
-
-        for (String elemento : listData) {
-            // Panel para cada elemento que contiene un botón y una etiqueta opcional
-            JPanel panelElemento = new JPanel(new BorderLayout());
-            JButton botonElemento = new JButton(elemento);
-
-            // Añadir la acción del botón para enviar mensajes al servidor
-            botonElemento.addActionListener(e -> enviarMensajeServidor("Botón presionado: " + elemento));
-            panelElemento.add(botonElemento, BorderLayout.CENTER);
-
-            // Condición para mostrar el ícono
-            if (debeMostrarIcono(elemento)) {
-                JLabel etiquetaIcono = new JLabel(icono);
-                panelElemento.add(etiquetaIcono, BorderLayout.WEST);
-            }
-
-            panelLista.add(panelElemento);
+        // Crear un panel de desplazamiento para la lista
+        for (MenuUsuariosConectados user : allUsers) {
+            panel.add(user);
         }
-        */
 
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        return panel;
+        scrollPane.setViewportView(panel);
+        panelfinal.add(scrollPane);
+        return panelfinal;
     }
 
     // Método condicional para determinar si debe mostrarse el ícono

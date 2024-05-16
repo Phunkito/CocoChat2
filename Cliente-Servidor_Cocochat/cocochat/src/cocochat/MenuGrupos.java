@@ -58,17 +58,17 @@ public class MenuGrupos extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<MenuUsuariosConectados> allUsers = new ArrayList<MenuUsuariosConectados>();
-                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, null));
-                allUsers.add(new MenuUsuariosConectados("Baymax", false, null));
-                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, null));
-                allUsers.add(new MenuUsuariosConectados("Baymax", false, null));
-                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, null));
-                allUsers.add(new MenuUsuariosConectados("Baymax", false, null));
-                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, null));
-                allUsers.add(new MenuUsuariosConectados("Baymax", false, null));
-                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, null));
-                allUsers.add(new MenuUsuariosConectados("Baymax", false, null));
-                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, null));
+                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true));
+                allUsers.add(new MenuUsuariosConectados("Baymax", true));
+                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true));
+                allUsers.add(new MenuUsuariosConectados("Baymax", true));
+                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true));
+                allUsers.add(new MenuUsuariosConectados("Baymax", true));
+                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true));
+                allUsers.add(new MenuUsuariosConectados("Baymax", true));
+                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true));
+                allUsers.add(new MenuUsuariosConectados("Baymax", true));
+                allUsers.add(new MenuUsuariosConectados("Homelo Chino", true));
                 
                 ArrayList<String> usersotes = new ArrayList<String>();
                 for (MenuUsuariosConectados user : allUsers) {
@@ -87,6 +87,6 @@ public class MenuGrupos extends JPanel {
         add(GroupInfoPanel, BorderLayout.WEST);
         add(panelBotones, BorderLayout.EAST);
         add(invisibleButton, BorderLayout.CENTER);
-        setPreferredSize(new Dimension(280, 30)); // Tamaño del recuadro ajustado
+        setPreferredSize(new Dimension(270, 30)); // Tamaño del recuadro ajustado
     }
 }
