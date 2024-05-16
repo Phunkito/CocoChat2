@@ -22,7 +22,6 @@ public class MenuUsuarioInterfaz extends JFrame {
     private PrintWriter salidaServidor;
     private BufferedReader entradaServidor;
     private boolean ejecutando = true;
-    private DefaultListModel<String> listModel;
     //private ArrayList<MenuGrupo> grupos = new ArrayList<MenuGrupo>();
     private ArrayList<MenuUsuariosConectados> allUsers = new ArrayList<MenuUsuariosConectados>();
     private ArrayList<MenuAmigos> allFriends = new ArrayList<MenuAmigos>();
@@ -239,7 +238,6 @@ public class MenuUsuarioInterfaz extends JFrame {
     }
 
     private JPanel crearListaUsuarios() {
-        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -256,7 +254,6 @@ public class MenuUsuarioInterfaz extends JFrame {
     }
 
     private JPanel crearGrupos() {
-        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -274,7 +271,6 @@ public class MenuUsuarioInterfaz extends JFrame {
 
     // Método para crear un panel con una lista y botones con íconos condicionales
     private JPanel crearAmigos() {
-        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -289,4 +285,5 @@ public class MenuUsuarioInterfaz extends JFrame {
         panelfinal.add(scrollPane);
         return panelfinal;
     }
+    
 }
