@@ -36,7 +36,7 @@ public class ChatServer {
 
         while(true) {
             
-            imprimir();
+            //imprimir();
             
             Socket soc = ss.accept();
             
@@ -82,7 +82,7 @@ class ConversationHandler extends Thread {
 
         this.socket = socket;
 
-        fw = new FileWriter("C:\\Users\\valer\\ChatServer-Logs.txt", true);
+        fw = new FileWriter("C:\\Users\\sassi\\OneDrive\\Escritorio\\ChatServer-Logs.txt", true);
 
         bw = new BufferedWriter(fw);
 
