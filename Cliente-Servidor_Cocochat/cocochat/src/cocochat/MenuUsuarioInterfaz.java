@@ -114,10 +114,12 @@ public class MenuUsuarioInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(this, "Cerrar Sesión");
-
+                new LoginInterfaz();
+                dispose();
             }
-
+            
             //
+            
         });
 
         // Crear el panel superior usando un diseño de cuadrícula
@@ -132,13 +134,13 @@ public class MenuUsuarioInterfaz extends JFrame {
         panelAmigos = crearAmigos();
         panelGrupos = crearGrupos();
 
-        // Usar un `JSplitPane` para dividir la ventana en tres partes verticales
+        // Usar un JSplitPane para dividir la ventana en tres partes verticales
         JSplitPane splitPanePrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelUsuarios, panelAmigos);
         splitPanePrincipal.setResizeWeight(0.33);
         JSplitPane splitPaneCompleto = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanePrincipal, panelGrupos);
         splitPaneCompleto.setResizeWeight(0.66);
 
-        // Crear un panel principal usando `BorderLayout`
+        // Crear un panel principal usando BorderLayout
         panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
         panelPrincipal.add(splitPaneCompleto, BorderLayout.CENTER);
