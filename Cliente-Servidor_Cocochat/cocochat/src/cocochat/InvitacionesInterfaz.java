@@ -12,73 +12,76 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class InvitacionesInterfaz extends JFrame {
 
-    public InvitacionesInterfaz() {
-        super();
-        config();
-    }
+    private JPanel panel = new JPanel();
+    private JPanel mainPanel = new JPanel();
+    ArrayList<InvitacionPanel> Invitaciones = new ArrayList<InvitacionPanel>();
 
-    private void config() {
+    public InvitacionesInterfaz() {
         // Panel principal con color de fondo
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(Color.decode("#7990f8"));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        Invitaciones.add(new InvitacionPanel("NombreUsuario", "Solicitud de Amistad"));
+        Invitaciones.add(new InvitacionPanel("NombreUsuario", "Invitacion Al Grupo"));
+        Invitaciones.add(new InvitacionPanel("NombreUsuario", "Invitacion Al Grupo"));
+        Invitaciones.add(new InvitacionPanel("NombreUsuario", "Invitacion Al Grupo"));
         mainPanel.setLayout(new BorderLayout());
         this.add(mainPanel);
 
-        // Crear datos de ejemplo
-        String[] solicitudes = {"Solicitud 1", "Solicitud 2", "Solicitud 3", "Solicitud 4"};
-
         // Crear el modelo de lista con datos de ejemplo
         DefaultListModel<JPanel> listModel = new DefaultListModel<>();
-        for (String solicitud : solicitudes) {
-            JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
 
-            JLabel label = new JLabel(solicitud);
-            panel.add(label, BorderLayout.CENTER);
+        for (InvitacionPanel solicitud : Invitaciones) {
+            solicitud.setPreferredSize(new Dimension(140, 50));
+            JPanel grupo = new JPanel();
+            grupo.add(solicitud);
+            grupo.setBackground(Color.white);
 
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 2)); // Panel para botones de aceptar y eliminar
+            JPanel buttonPanel = new JPanel(); // Panel para botones de aceptar y eliminar
             JButton aceptarButton = new JButton("Aceptar");
+            aceptarButton.setPreferredSize(new Dimension(100, 30));
             aceptarButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(InvitacionesInterfaz.this, "Solicitud aceptada: " + solicitud);
+                    JOptionPane.showMessageDialog(mainPanel, "Solicitud aceptada: ");
                 }
             });
             buttonPanel.add(aceptarButton);
 
             JButton eliminarButton = new JButton("Eliminar");
+            eliminarButton.setPreferredSize(new Dimension(100, 30));
             eliminarButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(InvitacionesInterfaz.this, "Solicitud eliminada: " + solicitud);
+                    JOptionPane.showMessageDialog(mainPanel, "Se rechazo la solicitud de: ");
                 }
             });
             buttonPanel.add(eliminarButton);
+            buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            buttonPanel.setBackground(Color.white);
 
-            panel.add(buttonPanel, BorderLayout.EAST);
+            grupo.add(buttonPanel);
 
-            listModel.addElement(panel);
+            panel.add(grupo);
         }
 
-        // Crear la lista con el modelo personalizado
-        JList<JPanel> list = new JList<>(listModel);
-        list.setCellRenderer(new PanelListCellRenderer());
-        JScrollPane scrollPane = new JScrollPane(list);
+        JScrollPane scrollPane = new JScrollPane();
+
+        scrollPane.setViewportView(panel);
 
         // Agregar la lista al centro del panel principal
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Botón de regreso en la esquina inferior derecha
         JButton botonRegresar = new JButton("Regresar");
-        botonRegresar.setBackground(Color.WHITE);
         botonRegresar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(InvitacionesInterfaz.this, "Regresando...");
+                //JOptionPane.showMessageDialog(InvitacionesInterfaz.this, "Regresando...");
                 // Código para regresar
+                    dispose();
             }
         });
         mainPanel.add(botonRegresar, BorderLayout.SOUTH);
@@ -91,19 +94,10 @@ public class InvitacionesInterfaz extends JFrame {
         this.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG); // Restaurar barra de título
         this.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         this.setResizable(false); // Evitar que se pueda redimensionar la ventana
+        this.setVisible(true);
     }
 
     public static void main(String[] args) {
-        InvitacionesInterfaz interfaz = new InvitacionesInterfaz();
-        interfaz.setVisible(true);
-    }
-
-    // Renderer personalizado para mostrar los paneles en la lista
-    private class PanelListCellRenderer implements ListCellRenderer<JPanel> {
-        @Override
-        public Component getListCellRendererComponent(JList<? extends JPanel> list, JPanel value, int index,
-                                                      boolean isSelected, boolean cellHasFocus) {
-            return value;
-        }
+        SwingUtilities.invokeLater(() -> new InvitacionesInterfaz());
     }
 }

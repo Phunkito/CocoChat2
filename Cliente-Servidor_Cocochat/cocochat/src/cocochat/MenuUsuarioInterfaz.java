@@ -54,8 +54,14 @@ public class MenuUsuarioInterfaz extends JFrame {
         
         // Crear botones para solicitudes y cerrar sesión
         JButton botonRequest = new JButton("Solicitudes");
-        botonRequest.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Solicitudes");
+        botonRequest.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //JOptionPane.showMessageDialog(this, "Solicitudes");
+                new InvitacionesInterfaz();
+            }
+
+            //
         });
 
         JButton botonLogOut = new JButton("Cerrar Sesion");
