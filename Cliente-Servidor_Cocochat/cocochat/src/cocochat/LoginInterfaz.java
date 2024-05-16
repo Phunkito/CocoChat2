@@ -79,7 +79,7 @@ public class LoginInterfaz extends JFrame {
                     if (intentosFallidos >= 3) {
                         JOptionPane.showMessageDialog(LoginInterfaz.this, "Demasiados intentos fallidos. Por favor, recupere su contraseña.");
                         dispose(); // Cerrar la ventana actual
-                        new RegistroInterfaz(); // Abrir la nueva interfaz para recuperar contraseña
+                        new Recuperar_contraseña(); // Abrir la nueva interfaz para recuperar contraseña
                     } else {
                         JOptionPane.showMessageDialog(LoginInterfaz.this, "Credenciales incorrectas");
                     }
