@@ -7,29 +7,73 @@ import java.net.Socket;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-
 public class MenuUsuarioInterfaz extends JFrame {
+
     private JPanel panelUsuarios;
     private JPanel panelAmigos;
     private JPanel panelGrupos;
+    private JPanel panelPrincipal;
     private PrintWriter salidaServidor;
     private BufferedReader entradaServidor;
     private boolean ejecutando = true;
     private DefaultListModel<String> listModel;
+    //private ArrayList<MenuGrupo> grupos = new ArrayList<MenuGrupo>();
+    private ArrayList<MenuUsuariosConectados> allUsers = new ArrayList<MenuUsuariosConectados>();
+    private ArrayList<MenuAmigos> allFriends = new ArrayList<MenuAmigos>();
+    private ArrayList<MenuGrupos> allGroups = new ArrayList<MenuGrupos>();
 
     // Constructor para configurar la interfaz
     public MenuUsuarioInterfaz() {
+        //grupos.add(new MenuGrupo("Homelo Chino", users));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        allUsers.add(new MenuUsuariosConectados("Baymax", false, this));
+        allUsers.add(new MenuUsuariosConectados("Homelo Chino", true, this));
+        
+        allFriends.add(new MenuAmigos("Penilla :D", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        allFriends.add(new MenuAmigos("Homelo Chino", this));
+        
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
+        allGroups.add(new MenuGrupos("Penilla :D", this));
 
         // Título de la ventana
         setTitle("Menú");
 
         // Establecer tamaño de la ventana
-        setSize(800, 600);
+        setSize(1280, 720);
 
         // Configurar operación de cierre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,21 +88,22 @@ public class MenuUsuarioInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(this, "Cerrar Sesión");
-                
+
                 new CreacionGruposInterfaz();
                 dispose();
             }
 
             //
         });
-        
+
         // Crear botones para solicitudes y cerrar sesión
         JButton botonRequest = new JButton("Solicitudes");
         botonRequest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(this, "Solicitudes");
-                new InvitacionesInterfaz();
+                InvitacionesInterfaz ventana = new InvitacionesInterfaz();
+                ventana.setLocationRelativeTo(panelPrincipal);
             }
 
             //
@@ -69,11 +114,10 @@ public class MenuUsuarioInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(this, "Cerrar Sesión");
-                
+
             }
-            
+
             //
-            
         });
 
         // Crear el panel superior usando un diseño de cuadrícula
@@ -81,12 +125,12 @@ public class MenuUsuarioInterfaz extends JFrame {
         panelSuperior.add(titulo);
         panelSuperior.add(botonGrupo);
         panelSuperior.add(botonRequest);
-        panelSuperior.add(botonLogOut);        
+        panelSuperior.add(botonLogOut);
 
         // Crear paneles vacíos que se llenarán con los datos recibidos
-        panelUsuarios = crearPanelConLista("Usuarios", new String[]{});
-        panelAmigos = crearPanelConLista("Amigos", new String[]{});
-        panelGrupos = crearPanelConLista("Grupos", new String[]{});
+        panelUsuarios = crearListaUsuarios();
+        panelAmigos = crearAmigos();
+        panelGrupos = crearGrupos();
 
         // Usar un `JSplitPane` para dividir la ventana en tres partes verticales
         JSplitPane splitPanePrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelUsuarios, panelAmigos);
@@ -95,7 +139,7 @@ public class MenuUsuarioInterfaz extends JFrame {
         splitPaneCompleto.setResizeWeight(0.66);
 
         // Crear un panel principal usando `BorderLayout`
-        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
         panelPrincipal.add(splitPaneCompleto, BorderLayout.CENTER);
 
@@ -104,57 +148,6 @@ public class MenuUsuarioInterfaz extends JFrame {
 
         // Cargar datos desde el servidor y establecer el socket para enviar mensajes
         cargarDatosDesdeServidor();
-    }
-
-    // Método para crear un panel con una lista y botones con íconos condicionales
-    private JPanel crearPanelConLista(String titulo, String[] elementos) {
-                listModel = new DefaultListModel<>();
-
-        String[] listData = {"Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4"};
-        elementos = listData;
-
-        // Crear el componente JList
-        JList<String> list = new JList<>(elementos);
-        
-        // Asegurarse de que se puedan seleccionar múltiples elementos
-        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-        // Crear un panel de desplazamiento para la lista
-        JScrollPane scrollPane = new JScrollPane(list);
-        
-        //Crear el panel final
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(titulo));
-
-        /*
-        JPanel panelLista = new JPanel();
-        panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
-
-        // Ejemplo de ícono: cambiar la ruta a la imagen deseada
-        Icon icono = new ImageIcon("ruta/al/icono.png");
-
-        for (String elemento : listData) {
-            // Panel para cada elemento que contiene un botón y una etiqueta opcional
-            JPanel panelElemento = new JPanel(new BorderLayout());
-            JButton botonElemento = new JButton(elemento);
-
-            // Añadir la acción del botón para enviar mensajes al servidor
-            botonElemento.addActionListener(e -> enviarMensajeServidor("Botón presionado: " + elemento));
-            panelElemento.add(botonElemento, BorderLayout.CENTER);
-
-            // Condición para mostrar el ícono
-            if (debeMostrarIcono(elemento)) {
-                JLabel etiquetaIcono = new JLabel(icono);
-                panelElemento.add(etiquetaIcono, BorderLayout.WEST);
-            }
-
-            panelLista.add(panelElemento);
-        }
-        */
-
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        return panel;
     }
 
     // Método condicional para determinar si debe mostrarse el ícono
@@ -241,5 +234,57 @@ public class MenuUsuarioInterfaz extends JFrame {
     // Método principal para iniciar la aplicación
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MenuUsuarioInterfaz());
+    }
+
+    private JPanel crearListaUsuarios() {
+        listModel = new DefaultListModel<>();
+        JScrollPane scrollPane = new JScrollPane();
+        JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder("Usuarios"));
+
+        // Crear un panel de desplazamiento para la lista
+        for (MenuUsuariosConectados user : allUsers) {
+            panel.add(user);
+        }
+
+        scrollPane.setViewportView(panel);
+        panelfinal.add(scrollPane);
+        return panelfinal;
+    }
+
+    private JPanel crearGrupos() {
+        listModel = new DefaultListModel<>();
+        JScrollPane scrollPane = new JScrollPane();
+        JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder("Grupos"));
+
+        // Crear un panel de desplazamiento para la lista
+        for (MenuGrupos group : allGroups) {
+            panel.add(group);
+        }
+
+        scrollPane.setViewportView(panel);
+        panelfinal.add(scrollPane);
+        return panelfinal;
+    }
+
+    // Método para crear un panel con una lista y botones con íconos condicionales
+    private JPanel crearAmigos() {
+        listModel = new DefaultListModel<>();
+        JScrollPane scrollPane = new JScrollPane();
+        JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder("Amigos"));
+
+        // Crear un panel de desplazamiento para la lista
+        for (MenuAmigos frnds : allFriends) {
+            panel.add(frnds);
+        }
+
+        scrollPane.setViewportView(panel);
+        panelfinal.add(scrollPane);
+        return panelfinal;
     }
 }

@@ -42,8 +42,9 @@ public class ChatInterfaz extends JFrame {
     // Creas la lista y los componentes
     ArrayList<ChatMessagePanel> Mensajes;
 
-    public ChatInterfaz() {
+    public ChatInterfaz(String nameUser) {
         this.Mensajes = new ArrayList<ChatMessagePanel>();
+        this.setResizable(false);
 
         setSize(800, 600);
         setTitle("Chat");
@@ -53,7 +54,7 @@ public class ChatInterfaz extends JFrame {
         txtTexto = new JTextArea();
         btnEnviar = new JButton();
         btnRegresar = new JButton();
-        NombreChat = new JLabel("Nombre del chat");
+        NombreChat = new JLabel(nameUser);
         txtTextoEnviar = new JTextField();
 
         txtTexto.setColumns(20);
@@ -71,7 +72,7 @@ public class ChatInterfaz extends JFrame {
 
                 if (texto.length() <= 500) {
                     // Creas un nuevo ChatMessagePanel con ese texto
-                    ChatMessagePanel nuevoMensaje = new ChatMessagePanel("Nombre del usuario", texto);
+                    ChatMessagePanel nuevoMensaje = new ChatMessagePanel("Tú", texto);
 
                     // Agregas el nuevo mensaje a la lista
                     Mensajes.add(nuevoMensaje);
@@ -101,13 +102,15 @@ public class ChatInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Código regresar al menu de usuarios
+                new MenuUsuarioInterfaz();
+                dispose();
             }
         });
 
         //Prototipo para agregar mensajes enviados
         //Mensajes.add(new ChatMessagePanel("Nombre del usuario", "Mensaje"));
         //Prototipo para agregar mensajes recibidos
-        //Mensajes.add(new ChatMessagePanel(NombreChat.getText(), "Mensaje"));
+        Mensajes.add(new ChatMessagePanel(nameUser, "Mensaje"));
         
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,7 +152,7 @@ public class ChatInterfaz extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new ChatInterfaz().setVisible(true);
+            new ChatInterfaz("").setVisible(true);
         });
     }
 }
