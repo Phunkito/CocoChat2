@@ -52,11 +52,38 @@ public class CreacionGruposInterfaz extends JFrame {
             
         });
 
+        //Para el nombre del grupo
+        JLabel labelNombre = new JLabel("Nombre:");
+        labelNombre.setFont(new Font("Arial", Font.BOLD, 15));
+        JTextField textFieldNombre = new JTextField();
+        textFieldNombre.setPreferredSize(new Dimension(Short.MAX_VALUE, 40));
+
         // Crear el panel superior usando un diseño de cuadrícula
-        JPanel panelSuperior = new JPanel(new GridLayout(1, 3, 10, 10));
-        panelSuperior.add(titulo);
-        panelSuperior.add(botonCrear);
-        panelSuperior.add(botonReturn);
+        JPanel panelSuperior = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        panelSuperior.add(titulo, gbc);
+
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        panelSuperior.add(botonCrear, gbc);
+
+        gbc.gridx = 6;
+        panelSuperior.add(botonReturn, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panelSuperior.add(labelNombre, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 6;
+        panelSuperior.add(textFieldNombre, gbc);
 
         // Crear paneles vacíos que se llenarán con los datos recibidos
         panelUsuarios = crearPanelConLista("Usuarios", new String[]{});
