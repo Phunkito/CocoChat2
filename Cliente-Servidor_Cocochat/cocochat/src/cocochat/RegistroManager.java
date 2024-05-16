@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class RegistroManager {
-
     private Connection connection;
     public String mensaje;
 
@@ -47,24 +46,13 @@ public class RegistroManager {
             JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 caracteres.");
             return false;
         }
-        if (contraseña.length() > 20) {
-            JOptionPane.showMessageDialog(null, "La contraseña debe tener menos de 20 caracteres.");
-            return false;
-        }
-        if (usuario.length() > 20) {
-            JOptionPane.showMessageDialog(null, "El usuario debe tener menos de 20 caracteres.");
-            return false;
-        }
-  
+
         // Verificar si ya existe un usuario con ese nombre
         if (existeUsuario(usuario)) {
             JOptionPane.showMessageDialog(null, "Ya existe un usuario con ese nombre.");
             return false;
         }
-        if (usuario.isEmpty() || securityWord.isEmpty() || contraseña.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campos vacios");
-            return false;
-        }
+
         // Encriptar la contraseña y la palabra de seguridad antes de almacenarlas en la base de datos
         String contraseñaEncriptada = encriptarTexto(contraseña);
         String securityWordEncriptada = encriptarTexto(securityWord);
@@ -125,3 +113,4 @@ public class RegistroManager {
         }
     }
 }
+

@@ -15,6 +15,7 @@ public class CreacionGruposInterfaz extends JFrame {
     private PrintWriter salidaServidor;
     private BufferedReader entradaServidor;
     private boolean ejecutando = true;
+    private DefaultListModel<String> listModel;
     private ArrayList<MenuUsuariosConectados> allUsers = new ArrayList<MenuUsuariosConectados>();
 
     // Constructor para configurar la interfaz
@@ -114,10 +115,11 @@ public class CreacionGruposInterfaz extends JFrame {
 
     // Método para crear un panel con una lista y botones con íconos condicionales
     private JPanel crearPanelConLista(String titulo) {
+        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createTitledBorder(titulo));
+        panel.setBorder(BorderFactory.createTitledBorder("Usuarios"));
 
         // Crear un panel de desplazamiento para la lista
         for (MenuUsuariosConectados user : allUsers) {

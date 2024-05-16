@@ -22,6 +22,7 @@ public class MenuUsuarioInterfaz extends JFrame {
     private PrintWriter salidaServidor;
     private BufferedReader entradaServidor;
     private boolean ejecutando = true;
+    private DefaultListModel<String> listModel;
     //private ArrayList<MenuGrupo> grupos = new ArrayList<MenuGrupo>();
     private ArrayList<MenuUsuariosConectados> allUsers = new ArrayList<MenuUsuariosConectados>();
     private ArrayList<MenuAmigos> allFriends = new ArrayList<MenuAmigos>();
@@ -113,12 +114,10 @@ public class MenuUsuarioInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(this, "Cerrar Sesión");
-                new LoginInterfaz();
-                dispose();
+
             }
-            
+
             //
-            
         });
 
         // Crear el panel superior usando un diseño de cuadrícula
@@ -133,13 +132,13 @@ public class MenuUsuarioInterfaz extends JFrame {
         panelAmigos = crearAmigos();
         panelGrupos = crearGrupos();
 
-        // Usar un JSplitPane para dividir la ventana en tres partes verticales
+        // Usar un `JSplitPane` para dividir la ventana en tres partes verticales
         JSplitPane splitPanePrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelUsuarios, panelAmigos);
         splitPanePrincipal.setResizeWeight(0.33);
         JSplitPane splitPaneCompleto = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanePrincipal, panelGrupos);
         splitPaneCompleto.setResizeWeight(0.66);
 
-        // Crear un panel principal usando BorderLayout
+        // Crear un panel principal usando `BorderLayout`
         panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
         panelPrincipal.add(splitPaneCompleto, BorderLayout.CENTER);
@@ -238,6 +237,7 @@ public class MenuUsuarioInterfaz extends JFrame {
     }
 
     private JPanel crearListaUsuarios() {
+        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -254,6 +254,7 @@ public class MenuUsuarioInterfaz extends JFrame {
     }
 
     private JPanel crearGrupos() {
+        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -271,6 +272,7 @@ public class MenuUsuarioInterfaz extends JFrame {
 
     // Método para crear un panel con una lista y botones con íconos condicionales
     private JPanel crearAmigos() {
+        listModel = new DefaultListModel<>();
         JScrollPane scrollPane = new JScrollPane();
         JPanel panelfinal = new JPanel(new BorderLayout()), panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -285,5 +287,4 @@ public class MenuUsuarioInterfaz extends JFrame {
         panelfinal.add(scrollPane);
         return panelfinal;
     }
-    
 }

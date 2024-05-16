@@ -111,7 +111,7 @@ public class ChatInterfaz extends JFrame {
         //Mensajes.add(new ChatMessagePanel("Nombre del usuario", "Mensaje"));
         //Prototipo para agregar mensajes recibidos
         Mensajes.add(new ChatMessagePanel(nameUser, "Mensaje"));
-
+        
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         panelMensajes.setLayout(new BoxLayout(panelMensajes, BoxLayout.Y_AXIS));
