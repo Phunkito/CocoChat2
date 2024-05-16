@@ -52,14 +52,10 @@ public class RegistroManager {
             return false;
         }
         if (usuario.length() > 20) {
-            JOptionPane.showMessageDialog(null, "La contraseña debe tener menos de 20 caracteres.");
+            JOptionPane.showMessageDialog(null, "El usuario debe tener menos de 20 caracteres.");
             return false;
         }
-        if (usuario
-                .length() < 8) {
-            JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 caracteres.");
-            return false;
-        }
+  
         // Verificar si ya existe un usuario con ese nombre
         if (existeUsuario(usuario)) {
             JOptionPane.showMessageDialog(null, "Ya existe un usuario con ese nombre.");
